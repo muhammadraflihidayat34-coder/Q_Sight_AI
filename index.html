@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Predictive Queue Optimizer (Q-Sight AI) — Proposal KLIKSTART 4.0</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brandDark: '#0B1120',
+            brandSlate: '#0F172A',
+            brandPrimary: '#2563EB',
+            brandIndigo: '#4F46E5',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Pola latar belakang hero modern */
+    .hero-mesh {
+      background-color: #0B1120;
+      background-image:
+        radial-gradient(circle at 80% 20%, rgba(79, 70, 229, 0.25), transparent 42%),
+        radial-gradient(circle at 15% 80%, rgba(37, 99, 235, 0.2), transparent 42%),
+        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08), transparent 55%),
+        linear-gradient(to right, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+    }
+
+    /* Custom Range Slider */
+    input[type="range"].ai-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      border-radius: 999px;
+      background: #E2E8F0;
+      outline: none;
+    }
+    input[type="range"].ai-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #2563EB;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.45);
+      cursor: pointer;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    input[type="range"].ai-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+      background: #1D4ED8;
+    }
+    input[type="range"].ai-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #2563EB;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.45);
+      cursor: pointer;
+    }
+
+    /* Animasi denyut lampu indikator loket */
+    @keyframes pulseBeacon {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.65; transform: scale(1.08); }
+    }
+    .beacon-active {
+      animation: pulseBeacon 1.8s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-600 selection:text-white">
+
+  <!-- =====================================================================
+       NAVIGASI STICKY (DESKTOP & MOBILE DRAWER)
+  ====================================================================== -->
+  <header class="sticky top-0 z-50 bg-[#0B1120]/95 backdrop-blur-md border-b border-slate-800/90 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Brand Logo -->
+        <a href="#hero" class="flex items-center gap-3 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition">
+            <i data-lucide="scan-eye" class="w-5 h-5 text-white"></i>
+          </div>
+          <div>
+            <div class="font-heading font-extrabold text-base sm:text-lg tracking-tight leading-none">
+              Q-Sight <span class="text-blue-400">AI</span>
+            </div>
+            <div class="text-[10px] font-mono text-slate-400 tracking-wider uppercase mt-0.5">
+              KLIKSTART 4.0 • BTP Tel-U
+            </div>
+          </div>
+        </a>
+
+        <!-- Desktop Menu -->
+        <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
+          <a href="#hero" class="hover:text-white transition">Ringkasan</a>
+          <a href="#masalah" class="hover:text-white transition">Masalah & Solusi</a>
+          <a href="#mekanisme" class="hover:text-white transition">Mekanisme 5 Tahap</a>
+          <a href="#simulasi" class="hover:text-blue-400 transition flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Simulasi AI
+          </a>
+          <a href="#hardware" class="hover:text-white transition">Alat & Tech Stack</a>
+          <a href="#bisnis" class="hover:text-white transition">Model Bisnis & Tim</a>
+        </nav>
+
+        <!-- Desktop CTA & Mobile Hamburger Button -->
+        <div class="flex items-center gap-3">
+          <a href="#simulasi" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold shadow-sm shadow-blue-600/30 transition">
+            <i data-lucide="play" class="w-3.5 h-3.5"></i>
+            Demo Simulator
+          </a>
+
+          <!-- Hamburger Button (Mobile & Tablet) -->
+          <button
+            id="mobileMenuBtn"
+            type="button"
+            aria-label="Buka Menu Navigasi"
+            aria-expanded="false"
+            class="lg:hidden p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 transition"
+          >
+            <i id="menuIconOpen" data-lucide="menu" class="w-5 h-5"></i>
+            <i id="menuIconClose" data-lucide="x" class="w-5 h-5 hidden"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div id="mobileDrawer" class="hidden lg:hidden bg-[#0F172A] border-b border-slate-800 px-4 pt-2 pb-5 space-y-1.5 shadow-2xl">
+      <a href="#hero" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition">1. Ringkasan Eksekutif</a>
+      <a href="#masalah" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition">2. Latar Belakang Masalah</a>
+      <a href="#mekanisme" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition">3. Mekanisme Kerja (5 Tahap)</a>
+      <a href="#simulasi" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-blue-400 bg-blue-950/40 border border-blue-800/50">4. Simulasi Interaktif Teori Antrian</a>
+      <a href="#hardware" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition">5. Kebutuhan Alat & Tech Stack</a>
+      <a href="#bisnis" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition">6. Kompetitor, Model Bisnis & Tim</a>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       1. HERO SECTION & RINGKASAN EKSEKUTIF
+  ====================================================================== -->
+  <section id="hero" class="hero-mesh text-white py-14 sm:py-20 lg:py-24 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl">
+        <!-- Badge Proposal -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-xs sm:text-sm font-semibold mb-6">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>Proposal Ide Bisnis KLIKSTART 4.0 • BTP Telkom University • Pilar AI & IoT</span>
+        </div>
+
+        <!-- Judul Utama -->
+        <h1 class="font-heading text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12] text-white mb-6">
+          AI Predictive Queue Optimizer <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400">(Q-Sight AI)</span>
+        </h1>
+
+        <!-- Subjudul Persuasif -->
+        <p class="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed mb-8 max-w-3xl">
+          Mengubah kamera <strong class="text-white font-semibold">CCTV konvensional yang sudah ada</strong> menjadi asisten pengambil keputusan operasional <em>real-time</em> berbasis <strong class="text-blue-300 font-semibold">Computer Vision</strong> dan <strong class="text-emerald-300 font-semibold">Teori Antrian (M/M/m)</strong>—memprediksi penumpukan sebelum terjadi dan menyeimbangkan jalur layanan secara otomatis.
+        </p>
+
+        <!-- Tombol Aksi Cepat -->
+        <div class="flex flex-wrap items-center gap-3.5 mb-12">
+          <a href="#simulasi" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm sm:text-base shadow-lg shadow-blue-600/30 transition">
+            <i data-lucide="cpu" class="w-5 h-5"></i>
+            Uji Simulasi Antrian AI
+          </a>
+          <a href="#mekanisme" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm sm:text-base transition">
+            <i data-lucide="workflow" class="w-5 h-5 text-indigo-400"></i>
+            Pelajari Arsitektur Sistem
+          </a>
+        </div>
+      </div>
+
+      <!-- 4 Kartu Metrik Utama (KPI Value Proposition) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <!-- KPI 1 -->
+        <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-2xl p-5 hover:border-blue-500/50 transition">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center mb-3.5">
+            <i data-lucide="clock-alert" class="w-5 h-5"></i>
+          </div>
+          <div class="font-mono text-xs font-semibold text-blue-400 uppercase tracking-wider mb-1">Proactive Forecasting</div>
+          <h3 class="font-heading font-bold text-base sm:text-lg text-white mb-1.5">Prediksi Lonjakan 15–30 Menit Lebih Awal</h3>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Mendeteksi kenaikan rasio kedatangan terhadap kapasitas layanan sebelum antrean mengular.
+          </p>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-2xl p-5 hover:border-emerald-500/50 transition">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-3.5">
+            <i data-lucide="cctv" class="w-5 h-5"></i>
+          </div>
+          <div class="font-mono text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-1">Zero Camera Replacement</div>
+          <h3 class="font-heading font-bold text-base sm:text-lg text-white mb-1.5">Tanpa Ganti CCTV (Plug & Play RTSP)</h3>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Langsung terhubung ke CCTV eksisting klien tanpa investasi kamera sensor khusus berbiaya puluhan juta.
+          </p>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-2xl p-5 hover:border-indigo-500/50 transition">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center mb-3.5">
+            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+          </div>
+          <div class="font-mono text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">Workload-Aware AI</div>
+          <h3 class="font-heading font-bold text-base sm:text-lg text-white mb-1.5">Penyeimbang Jalur Berbasis Beban Transaksi</h3>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Membedakan estimasi waktu antara pembeli 1 barang ringan vs pembeli dengan 1 troli penuh.
+          </p>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-2xl p-5 hover:border-amber-500/50 transition">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center mb-3.5">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+          </div>
+          <div class="font-mono text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">Scalable Revenue</div>
+          <h3 class="font-heading font-bold text-base sm:text-lg text-white mb-1.5">Model Bisnis B2B SaaS Terjangkau</h3>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Skema berlangganan bulanan per loket dengan perangkat <em>Edge Box</em> hemat daya bagi ritel & fasilitas publik.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       2. LATAR BELAKANG MASALAH & URGENSI (PROBLEM-SOLUTION FIT)
+  ====================================================================== -->
+  <section id="masalah" class="py-14 sm:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-12">
+        <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">
+          <i data-lucide="target" class="w-4 h-4"></i>
+          <span>Problem-Solution Fit (Bobot Penilaian 25%)</span>
+        </div>
+        <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900">
+          Mengapa Sistem Antrean di Indonesia Saat Ini Belum Cukup?
+        </h2>
+        <p class="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
+          Berdasarkan observasi lapangan pada layanan ritel, perbankan, hingga gerbang parkir, solusi yang beredar saat ini masih menyisakan tiga celah krusial yang merugikan bisnis maupun pelanggan.
+        </p>
+      </div>
+
+      <!-- 3 Kartu Celah Masalah -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <!-- Masalah A -->
+        <div class="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                <i data-lucide="ticket-x" class="w-6 h-6"></i>
+              </div>
+              <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600">CELAH #01</span>
+            </div>
+            <h3 class="font-heading font-bold text-lg sm:text-xl text-slate-900 mb-3">
+              Sistem Tiket Kertas / QR Tidak Berlaku untuk Antrean Spontan
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              Aplikasi tiket antrean digital (seperti <em>Qiwii</em> atau <em>QueueBee</em>) hanya bekerja jika pelanggan mengambil nomor atau memindai QR terlebih dahulu. Sistem ini <strong>tidak dapat diterapkan pada antrean fisik alami</strong> seperti kasir supermarket, gerbang parkir mal, loket tiket bioskop, maupun kafe cepat saji.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-100 text-xs font-medium text-rose-600 flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+            <span>Blank-spot penuh pada sektor ritel & parkir</span>
+          </div>
+        </div>
+
+        <!-- Masalah B -->
+        <div class="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <i data-lucide="eye-off" class="w-6 h-6"></i>
+              </div>
+              <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600">CELAH #02</span>
+            </div>
+            <h3 class="font-heading font-bold text-lg sm:text-xl text-slate-900 mb-3">
+              CCTV Enterprise Mahal & Buta Terhadap Beban Transaksi
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              Sensor <em>people counter</em> khusus (seperti <em>FootfallCam</em> atau kamera AI <em>enterprise</em>) berbiaya puluhan juta rupiah, hanya menghitung jumlah kepala secara mentah (mengabaikan perbedaan antara pembeli <strong>1 item vs 1 troli penuh</strong>), dan sekadar menyajikan grafik laporan pasif setelah antrean terlanjur penuh.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-100 text-xs font-medium text-amber-700 flex items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
+            <span>3 orang bertroli penuh jauh lebih lama dari 6 orang tanpa troli</span>
+          </div>
+        </div>
+
+        <!-- Masalah C -->
+        <div class="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <i data-lucide="user-minus" class="w-6 h-6"></i>
+              </div>
+              <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600">CELAH #03</span>
+            </div>
+            <h3 class="font-heading font-bold text-lg sm:text-xl text-slate-900 mb-3">
+              Keterlambatan Pembukaan Loket & Hilangnya Omzet (Balking)
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              Supervisor toko sering terlambat mengambil keputusan membuka loket cadangan (misalnya mengubah konfigurasi <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">M/M/2 &rarr; M/M/3</span>). Akibatnya, pelanggan memilih membatalkan belanja (<em>balking</em>) atau meninggalkan antrean (<em>reneging</em>), yang langsung menurunkan pendapatan bisnis.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-100 text-xs font-medium text-indigo-600 flex items-center gap-2">
+            <i data-lucide="trending-down" class="w-4 h-4 shrink-0"></i>
+            <span>Kerugian langsung akibat keterlambatan respons staf</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Callout Solusi Q-Sight AI -->
+      <div class="bg-gradient-to-r from-[#0F172A] to-indigo-950 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-lg flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 text-xs font-mono font-semibold text-emerald-400 uppercase tracking-wider mb-2">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Terobosan Utama Q-Sight AI</span>
+          </div>
+          <h3 class="font-heading font-bold text-xl sm:text-2xl text-white mb-2">
+            Dari Sekadar "Menghitung Orang" Menjadi "Mesin Keputusan Prediktif"
+          </h3>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            Q-Sight AI menggabungkan deteksi visual <strong>YOLOv8</strong> (jumlah orang + estimasi volume barang) dengan rumus matematis <strong>Teori Antrian Erlang-C (M/M/m)</strong> secara <em>real-time</em>. Hasilnya: supervisor menerima peringatan dini sebelum terjadi penumpukan, dan pelanggan otomatis diarahkan ke loket tercepat.
+          </p>
+        </div>
+        <a href="#simulasi" class="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition shadow-md">
+          <span>Lihat Bukti Matematis</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       3. MEKANISME KERJA SISTEM (END-TO-END PIPELINE 5 TAHAP)
+  ====================================================================== -->
+  <section id="mekanisme" class="py-14 sm:py-20 bg-white border-y border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-12">
+        <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2">
+          <i data-lucide="git-merge" class="w-4 h-4"></i>
+          <span>Arsitektur End-to-End</span>
+        </div>
+        <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900">
+          Mekanisme Kerja Sistem (5 Tahap Terintegrasi)
+        </h2>
+        <p class="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
+          Alur pemrosesan data dari umpan video kamera CCTV konvensional hingga eksekusi tindakan operasional di lantai layanan dalam hitungan milidetik.
+        </p>
+      </div>
+
+      <!-- Visual Flow Diagram Responsif (Horizontal di Desktop, Vertikal di Mobile) -->
+      <div class="bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-800 mb-10 text-white shadow-xl">
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+            <span class="font-mono text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider">Data & Decision Pipeline Architecture</span>
+          </div>
+          <span class="hidden sm:inline-block font-mono text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full">
+            Latency &lt; 150ms (Edge Processing)
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 relative">
+          <!-- Step Node 1 -->
+          <div class="relative bg-slate-800/80 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs font-bold text-blue-400 bg-blue-500/15 px-2.5 py-1 rounded-lg">01. INPUT</span>
+                <i data-lucide="video" class="w-5 h-5 text-blue-400"></i>
+              </div>
+              <h4 class="font-heading font-bold text-sm text-white mb-1">CCTV Eksisting</h4>
+              <p class="text-xs text-slate-400">Stream RTSP / ONVIF tanpa ganti kamera</p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-700/80 font-mono text-[11px] text-slate-300">
+              720p/1080p • 15 FPS
+            </div>
+            <!-- Connector Arrow -->
+            <div class="lg:hidden flex justify-center mt-3 text-slate-500">
+              <i data-lucide="arrow-down" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <!-- Step Node 2 -->
+          <div class="relative bg-slate-800/80 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs font-bold text-indigo-400 bg-indigo-500/15 px-2.5 py-1 rounded-lg">02. VISION AI</span>
+                <i data-lucide="scan" class="w-5 h-5 text-indigo-400"></i>
+              </div>
+              <h4 class="font-heading font-bold text-sm text-white mb-1">YOLOv8 + ByteTrack</h4>
+              <p class="text-xs text-slate-400">Deteksi orang, ROI antrean & beban troli</p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-700/80 font-mono text-[11px] text-slate-300">
+              Auto-Blur Wajah (UU PDP)
+            </div>
+            <div class="lg:hidden flex justify-center mt-3 text-slate-500">
+              <i data-lucide="arrow-down" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <!-- Step Node 3 -->
+          <div class="relative bg-slate-800/80 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs font-bold text-cyan-400 bg-cyan-500/15 px-2.5 py-1 rounded-lg">03. MATH ENGINE</span>
+                <i data-lucide="calculator" class="w-5 h-5 text-cyan-400"></i>
+              </div>
+              <h4 class="font-heading font-bold text-sm text-white mb-1">Teori Antrian M/M/m</h4>
+              <p class="text-xs text-slate-400">Hitung λ, μ, utilisasi ρ, Lq & Wq real-time</p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-700/80 font-mono text-[11px] text-slate-300">
+              Erlang-C Live Solver
+            </div>
+            <div class="lg:hidden flex justify-center mt-3 text-slate-500">
+              <i data-lucide="arrow-down" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <!-- Step Node 4 -->
+          <div class="relative bg-slate-800/80 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs font-bold text-amber-400 bg-amber-500/15 px-2.5 py-1 rounded-lg">04. DISPATCH</span>
+                <i data-lucide="bell-ring" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <h4 class="font-heading font-bold text-sm text-white mb-1">Alert Supervisor</h4>
+              <p class="text-xs text-slate-400">Notifikasi WhatsApp jika prediksi ρ &gt; 85%</p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-700/80 font-mono text-[11px] text-slate-300">
+              Saran Buka +1 Loket
+            </div>
+            <div class="lg:hidden flex justify-center mt-3 text-slate-500">
+              <i data-lucide="arrow-down" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <!-- Step Node 5 -->
+          <div class="relative bg-gradient-to-br from-emerald-950/90 to-slate-800 border border-emerald-500/40 rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs font-bold text-emerald-400 bg-emerald-500/20 px-2.5 py-1 rounded-lg">05. ACTUATION</span>
+                <i data-lucide="traffic-cone" class="w-5 h-5 text-emerald-400"></i>
+              </div>
+              <h4 class="font-heading font-bold text-sm text-white mb-1">Smart Lane LED</h4>
+              <p class="text-xs text-slate-300">Lampu Hijau/Kuning/Merah di atas loket</p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-emerald-500/20 font-mono text-[11px] text-emerald-300">
+              ESP32 MQTT Control
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rincian Detail 5 Tahap -->
+      <div class="space-y-4">
+        <!-- Tahap 1 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:items-start hover:border-blue-300 transition">
+          <div class="w-11 h-11 rounded-2xl bg-blue-600 text-white font-heading font-extrabold text-base flex items-center justify-center shrink-0">
+            1
+          </div>
+          <div>
+            <h3 class="font-heading font-bold text-lg text-slate-900 mb-1.5">
+              Video Ingestion via CCTV Eksisting (Protokol RTSP / ONVIF)
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Perangkat <em>Edge AI Box</em> menarik aliran video secara langsung dari jaringan DVR/NVR atau kamera IP eksisting klien menggunakan protokol standar industri <strong>RTSP (Real-Time Streaming Protocol)</strong> dan <strong>ONVIF</strong>. Klien tidak perlu membongkar plafon atau membeli kamera baru, sehingga biaya adopsi awal turun drastis.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tahap 2 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:items-start hover:border-indigo-300 transition">
+          <div class="w-11 h-11 rounded-2xl bg-indigo-600 text-white font-heading font-extrabold text-base flex items-center justify-center shrink-0">
+            2
+          </div>
+          <div>
+            <h3 class="font-heading font-bold text-lg text-slate-900 mb-1.5">
+              Computer Vision & Load Detection (YOLOv8 + ByteTrack)
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Algoritma <strong>YOLOv8</strong> dipadukan dengan pelacak objek multi-target <strong>ByteTrack</strong> memetakan area tunggu (<em>Region of Interest / ROI</em>) tiap kasir/loket. Sistem tidak hanya menghitung jumlah kepala dan mencatat waktu pelayanan aktual per pelanggan, tetapi juga mengklasifikasikan <strong>bobot beban transaksi</strong> (apakah pelanggan membawa troli belanja penuh, keranjang kecil, atau hanya transaksi cepat).
+            </p>
+          </div>
+        </div>
+
+        <!-- Tahap 3 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:items-start hover:border-cyan-300 transition">
+          <div class="w-11 h-11 rounded-2xl bg-cyan-600 text-white font-heading font-extrabold text-base flex items-center justify-center shrink-0">
+            3
+          </div>
+          <div>
+            <h3 class="font-heading font-bold text-lg text-slate-900 mb-1.5">
+              Real-Time Queuing Theory Engine (Model Matematis M/M/m)
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Data visual dikonversi menjadi parameter kuantitatif teori antrian secara otomatis setiap detik: laju kedatangan (<span class="font-mono font-semibold text-slate-800">&lambda;</span> dalam orang/menit), kecepatan pelayanan efektif per server (<span class="font-mono font-semibold text-slate-800">&mu;</span>), tingkat utilisasi sistem (<span class="font-mono font-semibold text-slate-800">&rho; = &lambda; / (m &times; &mu;)</span>), rata-rata panjang antrean (<span class="font-mono font-semibold text-slate-800">L<sub>q</sub></span>), serta estimasi waktu tunggu (<span class="font-mono font-semibold text-slate-800">W<sub>q</sub></span>).
+            </p>
+          </div>
+        </div>
+
+        <!-- Tahap 4 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:items-start hover:border-amber-300 transition">
+          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-white font-heading font-extrabold text-base flex items-center justify-center shrink-0">
+            4
+          </div>
+          <div>
+            <h3 class="font-heading font-bold text-lg text-slate-900 mb-1.5">
+              Predictive Staff Dispatch (Peringatan Dini Supervisor)
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Dengan menggabungkan tren laju kedatangan 15 menit terakhir dan pola historis jam sibuk, sistem memproyeksikan kepadatan <strong>15–30 menit ke depan</strong>. Begitu prediksi utilisasi <span class="font-mono font-semibold text-slate-800">&rho;</span> melewati ambang batas aman <strong>85%</strong>, sistem otomatis mengirim pesan WhatsApp/Telegram ke ponsel atau <em>smartwatch</em> supervisor berisi instruksi spesifik: <em>"Buka +1 Loket Cadangan sekarang untuk memangkas waktu tunggu dari 6,8 menit menjadi 1,4 menit."</em>
+            </p>
+          </div>
+        </div>
+
+        <!-- Tahap 5 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:items-start hover:border-emerald-300 transition">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-white font-heading font-extrabold text-base flex items-center justify-center shrink-0">
+            5
+          </div>
+          <div>
+            <h3 class="font-heading font-bold text-lg text-slate-900 mb-1.5">
+              Smart Lane Recommender (Lampu Indikator Jalur Tercepat)
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Untuk mencegah penumpukan tidak merata antarjalur, <em>Edge AI</em> mengirimkan perintah melalui protokol <strong>MQTT</strong> ke modul mikrokontroler <strong>ESP32</strong> di atas tiap loket. Lampu indikator menyala <strong>Hijau</strong> pada jalur dengan estimasi waktu selesai paling singkat, <strong>Kuning</strong> pada jalur sedang, dan <strong>Merah</strong> pada jalur penuh atau sedang melayani troli besar.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       4. SIMULASI INTERAKTIF TEORI ANTRIAN & KEPUTUSAN AI (LIVE DEMO)
+  ====================================================================== -->
+  <section id="simulasi" class="py-14 sm:py-20 bg-slate-100/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header Simulasi -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-8">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">
+            <i data-lucide="sliders" class="w-4 h-4"></i>
+            <span>Interactive Erlang-C (M/M/m) Engine</span>
+          </div>
+          <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900">
+            Simulasi Interaktif Teori Antrian & Keputusan AI
+          </h2>
+          <p class="text-sm sm:text-base text-slate-600 mt-2 max-w-2xl">
+            Ubah parameter laju kedatangan, kecepatan kasir, jumlah loket, dan beban troli untuk melihat bagaimana mesin matematis Q-Sight AI mengambil keputusan secara otomatis.
+          </p>
+        </div>
+
+        <!-- Preset Skenario Cepat -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold text-slate-500 mr-1">Skenario Cepat:</span>
+          <button type="button" onclick="applyPreset('morning')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 shadow-sm transition">
+            Jam Sepi Pagi
+          </button>
+          <button type="button" onclick="applyPreset('lunch')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-700 border border-slate-200 hover:border-amber-300 shadow-sm transition">
+            Jam Makan Siang (Siaga)
+          </button>
+          <button type="button" onclick="applyPreset('weekend')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200 hover:border-rose-300 shadow-sm transition">
+            Akhir Pekan / Sibuk (Kritis)
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid Utama Simulator: Kontrol (Kiri 5 Kolom) & Output + Visualisasi Loket (Kanan 7 Kolom) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- PANEL KONTROL INPUT (5 Kolom) -->
+        <div class="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+            <h3 class="font-heading font-bold text-lg text-slate-900 flex items-center gap-2">
+              <i data-lucide="gauge" class="w-5 h-5 text-blue-600"></i>
+              Parameter Input CCTV & AI
+            </h3>
+            <span class="font-mono text-xs px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-semibold">Model M/M/m</span>
+          </div>
+
+          <!-- Slider 1: Laju Kedatangan (λ) -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label for="lambdaSlider" class="text-sm font-semibold text-slate-700">
+                Laju Kedatangan (<span class="font-mono text-blue-600">&lambda;</span>)
+              </label>
+              <span id="lambdaDisplay" class="font-mono text-sm font-bold px-2.5 py-0.5 rounded-lg bg-blue-50 text-blue-700">
+                10.0 org/mnt
+              </span>
+            </div>
+            <input id="lambdaSlider" type="range" min="2" max="24" step="0.5" value="10" class="w-full ai-slider" />
+            <div class="flex justify-between text-[11px] font-mono text-slate-400 mt-1.5">
+              <span>2 org/mnt</span>
+              <span>13 org/mnt</span>
+              <span>24 org/mnt</span>
+            </div>
+          </div>
+
+          <!-- Slider 2: Kecepatan Layanan Dasar per Loket (μ) -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label for="muSlider" class="text-sm font-semibold text-slate-700">
+                Kecepatan Layanan Dasar (<span class="font-mono text-indigo-600">&mu;</span>)
+              </label>
+              <span id="muDisplay" class="font-mono text-sm font-bold px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700">
+                4.5 org/mnt
+              </span>
+            </div>
+            <input id="muSlider" type="range" min="2" max="10" step="0.5" value="4.5" class="w-full ai-slider" />
+            <div class="flex justify-between text-[11px] font-mono text-slate-400 mt-1.5">
+              <span>2 org/mnt (Lambat)</span>
+              <span>6 org/mnt</span>
+              <span>10 org/mnt (Cepat)</span>
+            </div>
+          </div>
+
+          <!-- Pilihan Jumlah Loket Aktif (m): 1, 2, 3, 4, 5 -->
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <label class="text-sm font-semibold text-slate-700">
+                Jumlah Loket Aktif (<span class="font-mono text-slate-900">m</span>)
+              </label>
+              <span id="activeCountersLabel" class="font-mono text-xs font-semibold text-slate-500">3 Loket Beroperasi</span>
+            </div>
+            <div id="counterButtons" class="grid grid-cols-5 gap-2">
+              <button type="button" data-m="1" onclick="setCounterCount(1)" class="m-btn py-2.5 rounded-xl font-mono text-sm font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-400 transition">1</button>
+              <button type="button" data-m="2" onclick="setCounterCount(2)" class="m-btn py-2.5 rounded-xl font-mono text-sm font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-400 transition">2</button>
+              <button type="button" data-m="3" onclick="setCounterCount(3)" class="m-btn py-2.5 rounded-xl font-mono text-sm font-bold border-2 border-blue-600 bg-blue-600 text-white shadow-sm transition">3</button>
+              <button type="button" data-m="4" onclick="setCounterCount(4)" class="m-btn py-2.5 rounded-xl font-mono text-sm font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-400 transition">4</button>
+              <button type="button" data-m="5" onclick="setCounterCount(5)" class="m-btn py-2.5 rounded-xl font-mono text-sm font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-400 transition">5</button>
+            </div>
+          </div>
+
+          <!-- Toggle Kondisi Beban Transaksi (Deteksi YOLOv8) -->
+          <div class="pt-4 border-t border-slate-100">
+            <label class="block text-sm font-semibold text-slate-700 mb-2.5">
+              Deteksi Beban Transaksi (YOLOv8 Object Load)
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button
+                id="btnLoadNormal"
+                type="button"
+                onclick="setLoadCondition(false)"
+                class="p-3 rounded-2xl border-2 border-blue-600 bg-blue-50/70 text-left transition"
+              >
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-blue-900">Normal (Belanja Ringan)</span>
+                  <i data-lucide="shopping-bag" class="w-4 h-4 text-blue-600"></i>
+                </div>
+                <span class="block text-[11px] text-slate-600 mt-1">Durasi layanan standar (100%)</span>
+              </button>
+
+              <button
+                id="btnLoadHeavy"
+                type="button"
+                onclick="setLoadCondition(true)"
+                class="p-3 rounded-2xl border-2 border-slate-200 bg-white hover:border-amber-400 text-left transition"
+              >
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-800">Padat / Troli Penuh</span>
+                  <i data-lucide="shopping-cart" class="w-4 h-4 text-amber-600"></i>
+                </div>
+                <span class="block text-[11px] text-slate-500 mt-1">Durasi layanan +35% lebih lama</span>
+              </button>
+            </div>
+            <div id="effectiveMuNote" class="mt-2.5 text-[11px] font-mono text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200/70">
+              Kecepatan efektif (&mu;<sub>eff</sub>): 4.50 pelanggan/menit per loket
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL OUTPUT REAL-TIME & VISUALISASI 4 JALUR LOKET (7 Kolom) -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- 1. Panel Status Sistem (4 Kartu KPI Live) -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
+              <h3 class="font-heading font-bold text-lg text-slate-900">Telemetry & Status Sistem Real-Time</h3>
+              <span id="systemStatusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                STATUS: AMAN / OPTIMAL
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+              <!-- Utilisasi ρ -->
+              <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                <div class="text-xs text-slate-500 font-medium mb-1">Kesibukan Loket (<span class="font-mono">&rho;</span>)</div>
+                <div id="kpiUtilization" class="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900">74.1%</div>
+                <div class="text-[11px] text-slate-400 mt-1">Batas aman &le; 85%</div>
+              </div>
+
+              <!-- Panjang Antrean Lq -->
+              <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                <div class="text-xs text-slate-500 font-medium mb-1">Rata-rata Antrean (<span class="font-mono">L<sub>q</sub></span>)</div>
+                <div id="kpiQueueLength" class="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900">1.5</div>
+                <div class="text-[11px] text-slate-400 mt-1">Pelanggan menunggu</div>
+              </div>
+
+              <!-- Waktu Tunggu Wq -->
+              <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                <div class="text-xs text-slate-500 font-medium mb-1">Waktu Tunggu (<span class="font-mono">W<sub>q</sub></span>)</div>
+                <div id="kpiWaitTime" class="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900">0.15</div>
+                <div class="text-[11px] text-slate-400 mt-1">Menit per pelanggan</div>
+              </div>
+
+              <!-- Probabilitas Menunggu Pw -->
+              <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                <div class="text-xs text-slate-500 font-medium mb-1">Peluang Antre (<span class="font-mono">P<sub>w</sub></span>)</div>
+                <div id="kpiWaitProb" class="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900">52%</div>
+                <div class="text-[11px] text-slate-400 mt-1">Erlang-C probability</div>
+              </div>
+            </div>
+
+            <!-- 2. Kotak Rekomendasi Keputusan Otomatis AI (Supervisor Alert) -->
+            <div id="aiRecommendationBox" class="mt-5 rounded-2xl p-4 sm:p-5 bg-emerald-50/80 border border-emerald-200 transition-colors duration-300">
+              <div class="flex items-start gap-3.5">
+                <div id="aiRecIconBox" class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+                  <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                    <h4 id="aiRecTitle" class="font-heading font-bold text-sm sm:text-base text-emerald-950">
+                      Rekomendasi Keputusan Otomatis AI (Supervisor Alert)
+                    </h4>
+                    <span id="aiRecTag" class="font-mono text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-emerald-200/70 text-emerald-900">
+                      KAPASITAS IDEAL
+                    </span>
+                  </div>
+                  <p id="aiRecMessage" class="text-xs sm:text-sm text-emerald-900 leading-relaxed">
+                    Kapasitas 3 loket saat ini sangat memadai. Tidak diperlukan penambahan staf; biaya operasional tetap efisien.
+                  </p>
+                  <!-- Area Perbandingan Dampak +1 Loket & Tombol Eksekusi Cepat -->
+                  <div id="aiRecActionArea" class="hidden mt-3 pt-3 border-t border-amber-300/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div id="aiRecImpactStats" class="font-mono text-xs font-semibold text-slate-800"></div>
+                    <button
+                      id="btnApplyPlusOne"
+                      type="button"
+                      onclick="applyAddOneCounter()"
+                      class="shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition"
+                    >
+                      <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
+                      Simulasikan Buka +1 Loket
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Visualisasi Simulasi 4 Jalur Loket (Smart Lane Recommender) -->
+          <div class="bg-[#0F172A] text-white border border-slate-800 rounded-3xl p-6 shadow-lg">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
+              <div>
+                <h3 class="font-heading font-bold text-base sm:text-lg text-white flex items-center gap-2">
+                  <i data-lucide="traffic-cone" class="w-5 h-5 text-emerald-400"></i>
+                  Smart Lane Recommender (Simulasi Visual 4 Jalur Loket)
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  Lampu indikator mengarahkan pelanggan ke jalur dengan <strong>estimasi waktu selesai tercepat</strong>, bukan jumlah kepala tersedikit.
+                </p>
+              </div>
+              <span id="extraLaneBadge" class="hidden font-mono text-xs font-semibold px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
+                + Loket 5 Ekstra Aktif
+              </span>
+            </div>
+
+            <!-- Grid 4 Kartu Jalur Loket -->
+            <div id="laneCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              <!-- Diisi dinamis oleh JavaScript -->
+            </div>
+
+            <!-- Legenda Lampu Indikator -->
+            <div class="mt-4 pt-3.5 border-t border-slate-800 flex flex-wrap items-center gap-4 text-[11px] text-slate-400">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Hijau: Jalur Tercepat</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Kuning: Antrean Sedang</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Merah: Penuh / Troli Berat</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span> Abu-abu: Loket Tutup</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       5. KEBUTUHAN ALAT, HARDWARE & TECH STACK (TAB INTERAKTIF)
+  ====================================================================== -->
+  <section id="hardware" class="py-14 sm:py-20 bg-white border-y border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-8">
+        <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">
+          <i data-lucide="cpu" class="w-4 h-4"></i>
+          <span>Arsitektur Teknis & Bill of Materials</span>
+        </div>
+        <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900">
+          Kebutuhan Alat, Hardware & Tech Stack
+        </h2>
+        <p class="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
+          Perencanaan teknis dibagi menjadi tahap <strong>Prototipe MVP</strong> (untuk demo <em>mini pitching</em> KLIKSTART 4.0) dan tahap <strong>Implementasi B2B Komersial</strong> di lokasi klien nyata.
+        </p>
+      </div>
+
+      <!-- Navigasi Tab Interaktif -->
+      <div class="flex flex-wrap gap-2 p-1.5 bg-slate-100 border border-slate-200 rounded-2xl mb-8">
+        <button
+          id="tabBtnMvp"
+          type="button"
+          onclick="switchTechTab('mvp')"
+          class="tech-tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-blue-700 shadow-sm transition text-left sm:text-center"
+        >
+          1. Alat & Software Prototipe / MVP (Pitching)
+        </button>
+        <button
+          id="tabBtnB2b"
+          type="button"
+          onclick="switchTechTab('b2b')"
+          class="tech-tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition text-left sm:text-center"
+        >
+          2. Alat & Hardware Implementasi B2B (Klien Nyata)
+        </button>
+        <button
+          id="tabBtnTable"
+          type="button"
+          onclick="switchTechTab('table')"
+          class="tech-tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition text-left sm:text-center"
+        >
+          3. Tabel Perbandingan Biaya & Spesifikasi Teknis
+        </button>
+      </div>
+
+      <!-- TAB 1: ALAT & SOFTWARE TAHAP PROTOTIPE / MVP -->
+      <div id="tabContentMvp" class="tech-tab-panel space-y-6">
+        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-start sm:items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+              <i data-lucide="wallet" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="font-heading font-bold text-sm sm:text-base text-emerald-950">Keunggulan Pembuatan MVP KLIKSTART 4.0</h3>
+              <p class="text-xs sm:text-sm text-emerald-800">Tim tidak perlu membeli sensor mahal. Cukup gunakan laptop, webcam/HP, dan rekaman video antrean nyata untuk demo langsung di hadapan juri.</p>
+            </div>
+          </div>
+          <span class="font-mono text-xs sm:text-sm font-extrabold px-4 py-2 rounded-xl bg-white text-emerald-700 border border-emerald-300 shrink-0">
+            Estimasi Biaya: &lt; Rp 500.000
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Item MVP 1 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+            <span class="font-mono text-[11px] font-bold px-2.5 py-1 rounded-md bg-blue-100 text-blue-700">HARDWARE DEMO</span>
+            <h4 class="font-heading font-bold text-base text-slate-900 mt-3 mb-1.5">Laptop / PC Pengembangan</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">Laptop anggota tim (RAM min. 8GB, CPU i5/Ryzen 5 atau GPU NVIDIA) sebagai pusat pemrosesan model YOLOv8 dan server dasbor lokal saat presentasi.</p>
+          </div>
+
+          <!-- Item MVP 2 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+            <span class="font-mono text-[11px] font-bold px-2.5 py-1 rounded-md bg-blue-100 text-blue-700">INPUT KAMERA</span>
+            <h4 class="font-heading font-bold text-base text-slate-900 mt-3 mb-1.5">Webcam HD / Kamera Smartphone</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">Menggunakan aplikasi IP Webcam / DroidCam pada smartphone sebagai simulasi kamera CCTV RTSP untuk mendeteksi antrean langsung di ruangan pitching.</p>
+          </div>
+
+          <!-- Item MVP 3 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+            <span class="font-mono text-[11px] font-bold px-2.5 py-1 rounded-md bg-indigo-100 text-indigo-700">DATASET VALIDASI</span>
+            <h4 class="font-heading font-bold text-base text-slate-900 mt-3 mb-1.5">Video Rekaman Antrean Lapangan</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">Rekaman video nyata (dengan wajah diburamkan) dari kasir minimarket, kantin kampus Tel-U, atau gerbang parkir untuk membuktikan akurasi deteksi beban barang.</p>
+          </div>
+
+          <!-- Item MVP 4 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+            <span class="font-mono text-[11px] font-bold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-700">AI & VISION STACK</span>
+            <h4 class="font-heading font-bold text-base text-slate-900 mt-3 mb-1.5">Python 3.10+, OpenCV & Ultralytics YOLOv8</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">Ekosistem <em>open-source</em> gratis untuk deteksi objek (orang, keranjang, troli), pelacakan lintas-frame (ByteTrack), dan penghitungan waktu layanan.</p>
+          </div>
+
+          <!-- Item MVP 5 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+            <span class="font-mono text-[11px] font-bold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-700">BACKEND & UI</span>
+            <h4 class="font-heading font-bold text-base text-slate-900 mt-3 mb-1.5">FastAPI + Web Dashboard</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">Framework Python berkecepatan tinggi dengan WebSocket untuk mengalirkan metrik &lambda;, &mu;, &rho;, L<sub>q</sub>, W<sub>q</sub> ke antarmuka web secara <em>real-time</em>.</p>
+          </div>
+
+          <!-- Item MVP 6 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+            <span class="font-mono text-[11px] font-bold px-2.5 py-1 rounded-md bg-amber-100 text-amber-800">ALERT & IOT MINI</span>
+            <h4 class="font-heading font-bold text-base text-slate-900 mt-3 mb-1.5">Telegram / WhatsApp Bot API + ESP32 LED</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">Bot notifikasi gratis untuk mengirim peringatan pembukaan loket ke HP juri/tim, ditambah 1 modul ESP32 + lampu LED RGB untuk demo Smart Lane.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ALAT & HARDWARE TAHAP IMPLEMENTASI B2B -->
+      <div id="tabContentB2b" class="tech-tab-panel hidden space-y-5">
+        <div class="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="font-heading font-bold text-sm sm:text-base text-white">Arsitektur Edge-to-Cloud Komersial (Siap Skalabilitas B2B)</h3>
+            <p class="text-xs text-slate-400">Dirancang agar pemrosesan video berjalan lokal di toko klien (hemat kuota internet & patuh regulasi privasi data UU PDP).</p>
+          </div>
+          <span class="font-mono text-xs px-3 py-1.5 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-400/30 shrink-0">
+            5 Komponen Utama Lapangan
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- B2B 1 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-mono font-bold text-sm">01</div>
+              <div>
+                <h4 class="font-heading font-bold text-base text-slate-900">CCTV IP Eksisting Klien</h4>
+                <span class="font-mono text-xs text-blue-600">Protokol RTSP / ONVIF • Min. 720p/1080p</span>
+              </div>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Memanfaatkan kamera pengawas yang sudah terpasang menghadap area kasir, loket tiket, atau gerbang parkir. Tidak ada biaya penggantian kamera baru bagi klien.
+            </p>
+          </div>
+
+          <!-- B2B 2 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-mono font-bold text-sm">02</div>
+              <div>
+                <h4 class="font-heading font-bold text-base text-slate-900">Edge AI Computing Box</h4>
+                <span class="font-mono text-xs text-indigo-600">NVIDIA Jetson Orin Nano 8GB / Mini PC Intel N100</span>
+              </div>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Unit komputasi ringkas yang dipasang di ruang server/kasir klien. Menjalankan inferensi AI secara lokal sehingga video mentah tidak perlu diunggah ke cloud (hemat bandwidth 95%) sekaligus melakukan <strong>auto-blurring wajah</strong> demi kepatuhan UU Perlindungan Data Pribadi (UU PDP).
+            </p>
+          </div>
+
+          <!-- B2B 3 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-slate-800 text-white flex items-center justify-center font-mono font-bold text-sm">03</div>
+              <div>
+                <h4 class="font-heading font-bold text-base text-slate-900">Perangkat Jaringan Lokal</h4>
+                <span class="font-mono text-xs text-slate-600">PoE Switch & Router Industrial</span>
+              </div>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Menghubungkan aliran video dari NVR/CCTV ke Edge AI Box dalam jaringan lokal terisolasi (VLAN) serta menyediakan koneksi internet cadangan untuk pengiriman metrik ke cloud.
+            </p>
+          </div>
+
+          <!-- B2B 4 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-mono font-bold text-sm">04</div>
+              <div>
+                <h4 class="font-heading font-bold text-base text-slate-900">Smart Lane Indicator Module</h4>
+                <span class="font-mono text-xs text-emerald-600">ESP32 + Panel LED Matrix RGB / Smart Bulb</span>
+              </div>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Perangkat penunjuk visual yang dipasang di atas tiap meja kasir/loket. Menerima sinyal nirkabel via protokol <strong>MQTT/Wi-Fi</strong> dari Edge Box untuk menyalakan warna Hijau, Kuning, atau Merah secara otomatis.
+            </p>
+          </div>
+
+          <!-- B2B 5 -->
+          <div class="md:col-span-2 bg-slate-50 border border-slate-200 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-mono font-bold text-sm">05</div>
+              <div>
+                <h4 class="font-heading font-bold text-base text-slate-900">Cloud Backend, Analytics & WhatsApp Gateway</h4>
+                <span class="font-mono text-xs text-amber-700">VPS Cloud • Time-Series DB • Web App & WA API</span>
+              </div>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Menerima ringkasan data telemetri ringan (angka metrik &lambda;, &mu;, &rho;, L<sub>q</sub>, W<sub>q</sub>), menyimpannya dalam database <em>time-series</em> untuk laporan performa cabang bagi manajemen pusat, serta mengirimkan peringatan langsung ke WhatsApp supervisor lapangan.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: TABEL PERBANDINGAN BIAYA & SPESIFIKASI TEKNIS -->
+      <div id="tabContentTable" class="tech-tab-panel hidden">
+        <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[760px]">
+              <thead>
+                <tr class="bg-slate-900 text-white text-xs uppercase tracking-wider">
+                  <th class="py-4 px-5 font-semibold">Nama Komponen</th>
+                  <th class="py-4 px-4 font-semibold">Kategori</th>
+                  <th class="py-4 px-4 font-semibold">Spesifikasi Teknis</th>
+                  <th class="py-4 px-4 font-semibold">Fungsi dalam Sistem</th>
+                  <th class="py-4 px-5 font-semibold text-right">Estimasi Harga (IDR)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 text-xs sm:text-sm">
+                <tr class="hover:bg-slate-50">
+                  <td class="py-4 px-5 font-bold text-slate-900">Webcam HD / IP Cam Demo <span class="block text-[11px] font-normal text-emerald-600">(Tahap MVP)</span></td>
+                  <td class="py-4 px-4"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700">Hardware</span></td>
+                  <td class="py-4 px-4 font-mono text-xs text-slate-600">1080p 30FPS USB / Smartphone RTSP</td>
+                  <td class="py-4 px-4 text-slate-600">Menangkap video antrean saat demo pitching di depan juri</td>
+                  <td class="py-4 px-5 font-mono font-semibold text-right text-slate-900">Rp 0 – Rp 250.000</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-4 px-5 font-bold text-slate-900">Modul ESP32 + LED Matrix RGB <span class="block text-[11px] font-normal text-blue-600">(MVP & B2B per Loket)</span></td>
+                  <td class="py-4 px-4"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700">Hardware IoT</span></td>
+                  <td class="py-4 px-4 font-mono text-xs text-slate-600">ESP32 Wi-Fi + Panel LED P5 / Smart Bulb</td>
+                  <td class="py-4 px-4 text-slate-600">Lampu indikator Hijau/Kuning/Merah penunjuk jalur tercepat</td>
+                  <td class="py-4 px-5 font-mono font-semibold text-right text-slate-900">Rp 150.000 – Rp 350.000</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-4 px-5 font-bold text-slate-900">Edge AI Computing Box <span class="block text-[11px] font-normal text-indigo-600">(Tahap Implementasi B2B)</span></td>
+                  <td class="py-4 px-4"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700">Hardware Edge</span></td>
+                  <td class="py-4 px-4 font-mono text-xs text-slate-600">Mini PC Intel N100 16GB / Jetson Orin Nano</td>
+                  <td class="py-4 px-4 text-slate-600">Pemrosesan YOLOv8 lokal (4–6 stream CCTV) + auto-blur privasi</td>
+                  <td class="py-4 px-5 font-mono font-semibold text-right text-slate-900">Rp 2.800.000 – Rp 6.500.000</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-4 px-5 font-bold text-slate-900">PoE Switch & Router Lokal <span class="block text-[11px] font-normal text-indigo-600">(Tahap Implementasi B2B)</span></td>
+                  <td class="py-4 px-4"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700">Hardware Net</span></td>
+                  <td class="py-4 px-4 font-mono text-xs text-slate-600">8-Port Gigabit Switch + Industrial Router</td>
+                  <td class="py-4 px-4 text-slate-600">Konektivitas jaringan lokal CCTV RTSP dan modul indikator MQTT</td>
+                  <td class="py-4 px-5 font-mono font-semibold text-right text-slate-900">Rp 650.000 – Rp 1.200.000</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-4 px-5 font-bold text-slate-900">AI Vision & Queuing Engine <span class="block text-[11px] font-normal text-emerald-600">(Core Software)</span></td>
+                  <td class="py-4 px-4"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700">Software</span></td>
+                  <td class="py-4 px-4 font-mono text-xs text-slate-600">Python, YOLOv8, ByteTrack, OpenCV, FastAPI</td>
+                  <td class="py-4 px-4 text-slate-600">Deteksi antrean, klasifikasi beban troli, & solver Erlang-C M/M/m</td>
+                  <td class="py-4 px-5 font-mono font-semibold text-right text-emerald-700">Rp 0 (Open-Source)</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-4 px-5 font-bold text-slate-900">Cloud VPS & WhatsApp API <span class="block text-[11px] font-normal text-indigo-600">(Operasional Bulanan)</span></td>
+                  <td class="py-4 px-4"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700">Software Cloud</span></td>
+                  <td class="py-4 px-4 font-mono text-xs text-slate-600">4 vCPU VPS + PostgreSQL + WA Gateway</td>
+                  <td class="py-4 px-4 text-slate-600">Dasbor manajemen pusat & pengiriman alert otomatis ke supervisor</td>
+                  <td class="py-4 px-5 font-mono font-semibold text-right text-slate-900">Rp 250.000 – Rp 450.000/bln</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       6. ANALISIS KOMPETITOR, MODEL BISNIS B2B & PEMBAGIAN PERAN TIM
+  ====================================================================== -->
+  <section id="bisnis" class="py-14 sm:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      
+      <!-- Bagian 6A: Matriks Perbandingan Kompetitor -->
+      <div>
+        <div class="max-w-3xl mb-8">
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <span>Inovasi & Keunikan (Bobot Penilaian 20%)</span>
+          </div>
+          <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900">
+            Posisi Kompetitif di Pasar Indonesia
+          </h2>
+          <p class="text-sm sm:text-base text-slate-600 mt-2">
+            Perbandingan objektif antara Q-Sight AI dengan solusi manajemen antrean yang sudah beredar di Indonesia.
+          </p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[760px]">
+              <thead>
+                <tr class="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wider text-slate-600">
+                  <th class="py-4 px-5 font-bold">Aspek Perbandingan</th>
+                  <th class="py-4 px-5 font-bold">Sistem Tiket Antrean Digital<br><span class="font-normal normal-case text-slate-400">(Qiwii, QueueBee, KYOO)</span></th>
+                  <th class="py-4 px-5 font-bold">CCTV Enterprise Analytics<br><span class="font-normal normal-case text-slate-400">(FootfallCam, Hikvision AI)</span></th>
+                  <th class="py-4 px-5 font-bold bg-blue-600 text-white">AI Predictive Queue Optimizer<br><span class="font-normal normal-case text-blue-100">(Q-Sight AI — Solusi Kita)</span></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 text-xs sm:text-sm">
+                <tr>
+                  <td class="py-4 px-5 font-semibold text-slate-900">Jenis Antrean yang Didukung</td>
+                  <td class="py-4 px-5 text-slate-600">Hanya antrean bernomor tiket / QR (Bank, Klinik)</td>
+                  <td class="py-4 px-5 text-slate-600">Antrean fisik kasir / kerumunan</td>
+                  <td class="py-4 px-5 bg-blue-50/50 font-semibold text-blue-950">Antrean fisik spontan (Kasir, Parkir, Kafe, Loket) tanpa tiket</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-5 font-semibold text-slate-900">Kebutuhan Ganti Kamera</td>
+                  <td class="py-4 px-5 text-slate-600">Beli mesin kiosk tiket & layar panggilan</td>
+                  <td class="py-4 px-5 text-rose-600 font-medium">Wajib beli kamera/sensor khusus (Hardware lock-in)</td>
+                  <td class="py-4 px-5 bg-blue-50/50 font-semibold text-emerald-700">Tidak perlu ganti kamera (Plug & Play CCTV RTSP lama)</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-5 font-semibold text-slate-900">Sifat Analisis Data</td>
+                  <td class="py-4 px-5 text-slate-600">Deskriptif (jumlah tiket menunggu saat ini)</td>
+                  <td class="py-4 px-5 text-slate-600">Reaktif / Laporan historis setelah penuh</td>
+                  <td class="py-4 px-5 bg-blue-50/50 font-semibold text-blue-950">Prediktif 15–30 menit sebelum penuh (Erlang-C M/M/m)</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-5 font-semibold text-slate-900">Deteksi Beban Transaksi</td>
+                  <td class="py-4 px-5 text-slate-400">Tidak ada</td>
+                  <td class="py-4 px-5 text-slate-600">Hanya menghitung jumlah kepala</td>
+                  <td class="py-4 px-5 bg-blue-50/50 font-semibold text-blue-950">Mendeteksi keranjang kecil vs troli belanja penuh</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-5 font-semibold text-slate-900">Panduan Jalur Pelanggan</td>
+                  <td class="py-4 px-5 text-slate-600">Layar TV & panggilan suara</td>
+                  <td class="py-4 px-5 text-slate-400">Tidak ada (hanya untuk manajer)</td>
+                  <td class="py-4 px-5 bg-blue-50/50 font-semibold text-blue-950">Smart Lane LED (Hijau/Kuning/Merah) per loket</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-5 font-semibold text-slate-900">Keterjangkauan Biaya (SME)</td>
+                  <td class="py-4 px-5 text-slate-600">Terjangkau</td>
+                  <td class="py-4 px-5 text-rose-600 font-medium">Sangat mahal (Puluhan juta per titik)</td>
+                  <td class="py-4 px-5 bg-blue-50/50 font-semibold text-emerald-700">Terjangkau untuk ritel menengah (Model SaaS B2B)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bagian 6B: Model Bisnis Awal & Target Validasi -->
+      <div>
+        <div class="max-w-3xl mb-8">
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">
+            <i data-lucide="briefcase" class="w-4 h-4"></i>
+            <span>Model Bisnis Awal (Bobot Penilaian 20%)</span>
+          </div>
+          <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900">
+            Skema Monetisasi B2B & Strategi Validasi Pasar
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Revenue Streams (7 Kolom) -->
+          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+              <div class="w-11 h-11 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center mb-4">
+                <i data-lucide="package-check" class="w-6 h-6"></i>
+              </div>
+              <div class="font-mono text-xs font-bold text-blue-600 uppercase mb-1">Stream 01 • One-Time Setup</div>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mb-2">Paket Instalasi & Edge Device</h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                Biaya pemasangan awal satu kali mencakup unit <em>Edge AI Box</em>, modul lampu indikator LED per loket, serta kalibrasi zona antrean pada CCTV klien.
+              </p>
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 font-mono text-xs font-bold text-slate-800">
+                Estimasi: Rp 3,5 Jt – Rp 5 Jt / cabang
+              </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+              <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-4">
+                <i data-lucide="repeat" class="w-6 h-6"></i>
+              </div>
+              <div class="font-mono text-xs font-bold text-emerald-600 uppercase mb-1">Stream 02 • Recurring SaaS</div>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mb-2">Langganan Bulanan per Loket</h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                Pendapatan berulang bulanan untuk akses dasbor analitik <em>real-time</em>, kuota peringatan WhatsApp supervisor, pembaruan model AI, dan garansi pemeliharaan.
+              </p>
+              <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 font-mono text-xs font-bold text-emerald-800">
+                Estimasi: Rp 300 Rb – Rp 450 Rb / loket / bln
+              </div>
+            </div>
+          </div>
+
+          <!-- Target Validasi Awal (5 Kolom) -->
+          <div class="lg:col-span-5 bg-[#0F172A] text-white rounded-3xl p-6 sm:p-7 border border-slate-800">
+            <h3 class="font-heading font-bold text-lg text-white mb-2 flex items-center gap-2">
+              <i data-lucide="map-pin" class="w-5 h-5 text-blue-400"></i>
+              Target Validasi Awal (Area Bandung & Tel-U)
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">
+              Segmen B2B yang mudah diwawancarai tim selama masa inkubasi KLIKSTART 4.0:
+            </p>
+            <ul class="space-y-3 text-xs sm:text-sm text-slate-200">
+              <li class="flex items-start gap-2.5 bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                <span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <span><strong>Supermarket Lokal & Minimarket Ramai:</strong> Area Bojongsoang & Buahbatu yang mengalami antrean troli pada jam pulang kerja & akhir pekan.</span>
+              </li>
+              <li class="flex items-start gap-2.5 bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <span><strong>Kafe & Restoran Cepat Saji:</strong> Outlet sekitar kampus Telkom University dengan lonjakan pesanan saat jam makan siang.</span>
+              </li>
+              <li class="flex items-start gap-2.5 bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                <span class="w-5 h-5 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <span><strong>Klinik Pratama & Pengelola Gerbang Parkir:</strong> Fasilitas layanan dengan loket pembayaran fisik berlajur ganda.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bagian 6C: Saran Pembagian Tugas Tim (4 Orang) -->
+      <div>
+        <div class="max-w-3xl mb-8">
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">
+            <i data-lucide="users" class="w-4 h-4"></i>
+            <span>Eksekusi & Kolaborasi</span>
+          </div>
+          <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900">
+            Saran Pembagian Peran Tim (4 Anggota)
+          </h2>
+          <p class="text-sm sm:text-base text-slate-600 mt-2">
+            Pembagian fokus kerja agar penyusunan validasi bisnis, prototipe AI, dan materi <em>mini pitching</em> berjalan paralel dan efektif.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- Role 1 -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:border-blue-400 transition">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center">
+                <i data-lucide="handshake" class="w-5 h-5"></i>
+              </div>
+              <span class="font-mono text-xs font-bold text-slate-400">ANGGOTA 01</span>
+            </div>
+            <h3 class="font-heading font-bold text-base text-slate-900 mb-1">Hustler / Business & Field Validation</h3>
+            <p class="text-xs text-slate-600 leading-relaxed mt-2">
+              Melakukan wawancara langsung ke manajer supermarket/kafe/parkiran untuk memvalidasi masalah, menyusun <em>Business Model Canvas</em>, menghitung harga langganan, dan merancang proyeksi finansial.
+            </p>
+          </div>
+
+          <!-- Role 2 -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:border-indigo-400 transition">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center">
+                <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+              </div>
+              <span class="font-mono text-xs font-bold text-slate-400">ANGGOTA 02</span>
+            </div>
+            <h3 class="font-heading font-bold text-base text-slate-900 mb-1">AI & Computer Vision Engineer</h3>
+            <p class="text-xs text-slate-600 leading-relaxed mt-2">
+              Mengonfigurasi pipeline <strong>YOLOv8 + ByteTrack</strong>, menentukan koordinat ROI tiap loket, melatih klasifikasi keranjang vs troli, serta mengimplementasikan rumus matematis antrian <strong>M/M/m</strong>.
+            </p>
+          </div>
+
+          <!-- Role 3 -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:border-emerald-400 transition">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-white flex items-center justify-center">
+                <i data-lucide="code-2" class="w-5 h-5"></i>
+              </div>
+              <span class="font-mono text-xs font-bold text-slate-400">ANGGOTA 03</span>
+            </div>
+            <h3 class="font-heading font-bold text-base text-slate-900 mb-1">Full-Stack & IoT Integration Developer</h3>
+            <p class="text-xs text-slate-600 leading-relaxed mt-2">
+              Membangun dasbor web <em>real-time</em> (FastAPI + WebSocket), mengintegrasikan Bot WhatsApp/Telegram untuk alert supervisor, serta menghubungkan ESP32 MQTT untuk lampu indikator loket.
+            </p>
+          </div>
+
+          <!-- Role 4 -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:border-amber-400 transition">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center">
+                <i data-lucide="presentation" class="w-5 h-5"></i>
+              </div>
+              <span class="font-mono text-xs font-bold text-slate-400">ANGGOTA 04</span>
+            </div>
+            <h3 class="font-heading font-bold text-base text-slate-900 mb-1">Product Designer & Pitch Deck Strategist</h3>
+            <p class="text-xs text-slate-600 leading-relaxed mt-2">
+              Merancang antarmuka UX dasbor agar intuitif bagi manajer toko, menyusun alur <em>storytelling</em> slide presentasi 3–5 menit, dan memimpin koreografi demo langsung di depan dewan juri.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       FOOTER
+  ====================================================================== -->
+  <footer class="bg-[#0B1120] text-slate-400 py-10 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white">
+          <i data-lucide="scan-eye" class="w-4 h-4"></i>
+        </div>
+        <span class="font-heading font-bold text-white">Q-Sight AI — AI Predictive Queue Optimizer</span>
+      </div>
+      <p class="text-slate-500 text-center sm:text-right">
+        Dokumen Visual Konsep & Arsitektur Sistem • Kompetisi Ide Bisnis KLIKSTART 4.0 BTP Telkom University
+      </p>
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       JAVASCRIPT: MOBILE NAV, SIMULATOR ERLANG-C (M/M/m) & TAB TEKNIS
+  ====================================================================== -->
+  <script>
+    // ---------------------------------------------------------------------
+    // 1. NAVIGASI MOBILE DRAWER
+    // ---------------------------------------------------------------------
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+    const menuIconOpen = document.getElementById('menuIconOpen');
+    const menuIconClose = document.getElementById('menuIconClose');
+
+    function toggleMobileMenu(forceClose = false) {
+      const isCurrentlyHidden = mobileDrawer.classList.contains('hidden');
+      if (forceClose || !isCurrentlyHidden) {
+        mobileDrawer.classList.add('hidden');
+        menuIconOpen.classList.remove('hidden');
+        menuIconClose.classList.add('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      } else {
+        mobileDrawer.classList.remove('hidden');
+        menuIconOpen.classList.add('hidden');
+        menuIconClose.classList.remove('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    mobileMenuBtn.addEventListener('click', () => toggleMobileMenu(false));
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => toggleMobileMenu(true));
+    });
+
+    // ---------------------------------------------------------------------
+    // 2. MESIN SIMULASI TEORI ANTRIAN ERLANG-C (M/M/m) & KEPUTUSAN AI
+    // ---------------------------------------------------------------------
+    let state = {
+      lambda: 10.0,     // Laju kedatangan (pelanggan/menit)
+      muBase: 4.5,      // Kecepatan layanan dasar per loket (pelanggan/menit)
+      m: 3,             // Jumlah loket aktif (1..5)
+      heavyLoad: false  // false = Normal, true = Troli Penuh (+35% durasi layanan)
+    };
+
+    const lambdaSlider = document.getElementById('lambdaSlider');
+    const muSlider = document.getElementById('muSlider');
+    const lambdaDisplay = document.getElementById('lambdaDisplay');
+    const muDisplay = document.getElementById('muDisplay');
+    const activeCountersLabel = document.getElementById('activeCountersLabel');
+    const effectiveMuNote = document.getElementById('effectiveMuNote');
+
+    // Fungsi faktorial untuk perhitungan Erlang-C
+    function factorial(n) {
+      if (n <= 1) return 1;
+      let res = 1;
+      for (let i = 2; i <= n; i++) res *= i;
+      return res;
+    }
+
+    /**
+     * Menghitung metrik antrian M/M/m (Erlang-C) secara presisi
+     * @param {number} lambda - Laju kedatangan (org/menit)
+     * @param {number} muEff - Kecepatan layanan efektif per server (org/menit)
+     * @param {number} m - Jumlah server / loket aktif
+     */
+    function calculateErlangC(lambda, muEff, m) {
+      const a = lambda / muEff; // Offered load (Erlangs)
+      const rho = a / m;        // Utilisasi per loket
+
+      if (rho >= 1.0) {
+        return {
+          stable: false,
+          rho: rho,
+          pWait: 1.0,
+          lq: Infinity,
+          wq: Infinity
+        };
+      }
+
+      // Hitung sigma_{n=0}^{m-1} (a^n / n!)
+      let sumTerms = 0;
+      for (let n = 0; n < m; n++) {
+        sumTerms += Math.pow(a, n) / factorial(n);
+      }
+
+      // Suku ke-m: (a^m) / (m! * (1 - rho))
+      const lastTerm = Math.pow(a, m) / (factorial(m) * (1 - rho));
+      const p0 = 1 / (sumTerms + lastTerm);
+      const pWait = lastTerm * p0; // Probabilitas pelanggan harus menunggu
+      const lq = (pWait * rho) / (1 - rho); // Rata-rata panjang antrean
+      const wq = lq / lambda; // Rata-rata waktu tunggu dalam antrean (menit)
+
+      return {
+        stable: true,
+        rho: rho,
+        pWait: pWait,
+        lq: lq,
+        wq: wq
+      };
+    }
+
+    function setCounterCount(count) {
+      state.m = count;
+      document.querySelectorAll('.m-btn').forEach(btn => {
+        const val = parseInt(btn.getAttribute('data-m'), 10);
+        if (val === count) {
+          btn.className = 'm-btn py-2.5 rounded-xl font-mono text-sm font-bold border-2 border-blue-600 bg-blue-600 text-white shadow-sm transition';
+        } else {
+          btn.className = 'm-btn py-2.5 rounded-xl font-mono text-sm font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-400 transition';
+        }
+      });
+      updateSimulatorUI();
+    }
+
+    function setLoadCondition(isHeavy) {
+      state.heavyLoad = isHeavy;
+      const btnNormal = document.getElementById('btnLoadNormal');
+      const btnHeavy = document.getElementById('btnLoadHeavy');
+
+      if (!isHeavy) {
+        btnNormal.className = 'p-3 rounded-2xl border-2 border-blue-600 bg-blue-50/70 text-left transition';
+        btnHeavy.className = 'p-3 rounded-2xl border-2 border-slate-200 bg-white hover:border-amber-400 text-left transition';
+      } else {
+        btnHeavy.className = 'p-3 rounded-2xl border-2 border-amber-500 bg-amber-50/80 text-left transition';
+        btnNormal.className = 'p-3 rounded-2xl border-2 border-slate-200 bg-white hover:border-blue-400 text-left transition';
+      }
+      updateSimulatorUI();
+    }
+
+    function applyPreset(presetName) {
+      if (presetName === 'morning') {
+        state.lambda = 4.5;
+        state.muBase = 5.0;
+        state.m = 2;
+        state.heavyLoad = false;
+      } else if (presetName === 'lunch') {
+        state.lambda = 12.0;
+        state.muBase = 4.5;
+        state.m = 3;
+        state.heavyLoad = false;
+      } else if (presetName === 'weekend') {
+        state.lambda = 14.5;
+        state.muBase = 4.5;
+        state.m = 3;
+        state.heavyLoad = true;
+      }
+
+      lambdaSlider.value = state.lambda;
+      muSlider.value = state.muBase;
+      setCounterCount(state.m);
+      setLoadCondition(state.heavyLoad);
+    }
+
+    function applyAddOneCounter() {
+      if (state.m < 5) {
+        setCounterCount(state.m + 1);
+      }
+    }
+
+    function updateSimulatorUI() {
+      state.lambda = parseFloat(lambdaSlider.value);
+      state.muBase = parseFloat(muSlider.value);
+
+      // Jika troli penuh (+35% durasi pelayanan), maka mu_eff = mu_base / 1.35
+      const muEff = state.heavyLoad ? (state.muBase / 1.35) : state.muBase;
+
+      lambdaDisplay.textContent = `${state.lambda.toFixed(1)} org/mnt`;
+      muDisplay.textContent = `${state.muBase.toFixed(1)} org/mnt`;
+      activeCountersLabel.textContent = `${state.m} Loket Beroperasi`;
+      effectiveMuNote.innerHTML = state.heavyLoad
+        ? `Kecepatan efektif (&mu;<sub>eff</sub>): <strong class="text-amber-700">${muEff.toFixed(2)} org/mnt</strong> (Durasi +35% akibat troli penuh)`
+        : `Kecepatan efektif (&mu;<sub>eff</sub>): <strong class="text-slate-800">${muEff.toFixed(2)} org/mnt</strong> per loket`;
+
+      // Hitung metrik kondisi saat ini
+      const current = calculateErlangC(state.lambda, muEff, state.m);
+      const utilPercent = (current.rho * 100);
+
+      // Update KPI Cards
+      const kpiUtilization = document.getElementById('kpiUtilization');
+      const kpiQueueLength = document.getElementById('kpiQueueLength');
+      const kpiWaitTime = document.getElementById('kpiWaitTime');
+      const kpiWaitProb = document.getElementById('kpiWaitProb');
+      const systemStatusBadge = document.getElementById('systemStatusBadge');
+
+      kpiUtilization.textContent = `${utilPercent.toFixed(1)}%`;
+
+      if (!current.stable) {
+        kpiUtilization.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-rose-600';
+        kpiQueueLength.textContent = '> 25';
+        kpiQueueLength.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-rose-600';
+        kpiWaitTime.textContent = '> 15.0';
+        kpiWaitTime.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-rose-600';
+        kpiWaitProb.textContent = '100%';
+        kpiWaitProb.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-rose-600';
+
+        systemStatusBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800';
+        systemStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span> STATUS: OVER-CAPACITY (KRITIS)`;
+      } else if (utilPercent > 85) {
+        kpiUtilization.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-amber-600';
+        kpiQueueLength.textContent = current.lq.toFixed(1);
+        kpiQueueLength.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-amber-600';
+        kpiWaitTime.textContent = current.wq.toFixed(2);
+        kpiWaitTime.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-amber-600';
+        kpiWaitProb.textContent = `${Math.round(current.pWait * 100)}%`;
+        kpiWaitProb.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-slate-900';
+
+        systemStatusBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800';
+        systemStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> STATUS: WASPADA (&gt;85% AMBANG)`;
+      } else {
+        kpiUtilization.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-emerald-600';
+        kpiQueueLength.textContent = current.lq.toFixed(1);
+        kpiQueueLength.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-slate-900';
+        kpiWaitTime.textContent = current.wq.toFixed(2);
+        kpiWaitTime.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-slate-900';
+        kpiWaitProb.textContent = `${Math.round(current.pWait * 100)}%`;
+        kpiWaitProb.className = 'font-mono text-2xl sm:text-3xl font-extrabold text-slate-900';
+
+        systemStatusBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800';
+        systemStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> STATUS: AMAN / OPTIMAL`;
+      }
+
+      // -------------------------------------------------------------------
+      // Update Kotak Rekomendasi Keputusan Otomatis AI (Supervisor Alert)
+      // -------------------------------------------------------------------
+      const aiRecBox = document.getElementById('aiRecommendationBox');
+      const aiRecIconBox = document.getElementById('aiRecIconBox');
+      const aiRecTitle = document.getElementById('aiRecTitle');
+      const aiRecTag = document.getElementById('aiRecTag');
+      const aiRecMessage = document.getElementById('aiRecMessage');
+      const aiRecActionArea = document.getElementById('aiRecActionArea');
+      const aiRecImpactStats = document.getElementById('aiRecImpactStats');
+      const btnApplyPlusOne = document.getElementById('btnApplyPlusOne');
+
+      // Simulasi dampak jika membuka +1 loket tambahan (m + 1)
+      const nextM = state.m + 1;
+      const nextSim = calculateErlangC(state.lambda, muEff, nextM);
+      const nextUtilPercent = (nextSim.rho * 100).toFixed(1);
+
+      const currentWaitStr = current.stable ? `${current.wq.toFixed(2)} mnt` : `>15.0 mnt (Membeludak)`;
+      const nextWaitStr = nextSim.stable ? `${nextSim.wq.toFixed(2)} mnt` : `>15.0 mnt (Masih Padat)`;
+
+      if (!current.stable || utilPercent > 85) {
+        const isCritical = !current.stable;
+
+        aiRecBox.className = isCritical
+          ? 'mt-5 rounded-2xl p-4 sm:p-5 bg-rose-50 border border-rose-300 transition-colors duration-300'
+          : 'mt-5 rounded-2xl p-4 sm:p-5 bg-amber-50 border border-amber-300 transition-colors duration-300';
+
+        aiRecIconBox.className = isCritical
+          ? 'w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0 mt-0.5'
+          : 'w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 mt-0.5';
+
+        aiRecIconBox.innerHTML = `<i data-lucide="bell-ring" class="w-5 h-5"></i>`;
+        aiRecTitle.className = isCritical ? 'font-heading font-bold text-sm sm:text-base text-rose-950' : 'font-heading font-bold text-sm sm:text-base text-amber-950';
+        aiRecTitle.textContent = 'ALERT SUPERVISOR: Segera Buka +1 Loket Tambahan!';
+
+        aiRecTag.className = isCritical
+          ? 'font-mono text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-rose-200 text-rose-900'
+          : 'font-mono text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-amber-200 text-amber-900';
+        aiRecTag.textContent = isCritical ? 'OVER-CAPACITY' : 'PREDIKSI LONJAKAN';
+
+        aiRecMessage.className = isCritical ? 'text-xs sm:text-sm text-rose-900 leading-relaxed' : 'text-xs sm:text-sm text-amber-900 leading-relaxed';
+        aiRecMessage.innerHTML = `Kesibukan loket mencapai <strong>${utilPercent.toFixed(1)}%</strong> (melewati batas aman 85%). Sistem otomatis mengirim notifikasi WhatsApp agar supervisor membuka <strong>Loket ${nextM}</strong> sebelum pelanggan membatalkan transaksi.`;
+
+        aiRecActionArea.classList.remove('hidden');
+        aiRecImpactStats.innerHTML = `Dampak buka +1 loket (${state.m} &rarr; ${nextM}): Utilisasi turun <strong>${utilPercent.toFixed(1)}% &rarr; ${nextUtilPercent}%</strong> | Waktu tunggu: <strong>${currentWaitStr} &rarr; ${nextWaitStr}</strong>`;
+
+        if (state.m < 5) {
+          btnApplyPlusOne.classList.remove('hidden');
+        } else {
+          btnApplyPlusOne.classList.add('hidden');
+        }
+
+      } else {
+        aiRecBox.className = 'mt-5 rounded-2xl p-4 sm:p-5 bg-emerald-50/80 border border-emerald-200 transition-colors duration-300';
+        aiRecIconBox.className = 'w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5';
+        aiRecIconBox.innerHTML = `<i data-lucide="check-circle-2" class="w-5 h-5"></i>`;
+        aiRecTitle.className = 'font-heading font-bold text-sm sm:text-base text-emerald-950';
+        aiRecTitle.textContent = 'Rekomendasi Keputusan Otomatis AI (Supervisor Alert)';
+        aiRecTag.className = 'font-mono text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-emerald-200/70 text-emerald-900';
+        aiRecTag.textContent = 'KAPASITAS IDEAL';
+        aiRecMessage.className = 'text-xs sm:text-sm text-emerald-900 leading-relaxed';
+        aiRecMessage.innerHTML = `Utilisasi ${state.m} loket aktif berada pada <strong>${utilPercent.toFixed(1)}%</strong> (di bawah ambang 85%). Operasional berjalan optimal tanpa perlu menambah staf loket.`;
+        aiRecActionArea.classList.add('hidden');
+      }
+
+      // -------------------------------------------------------------------
+      // Render Visualisasi 4 Jalur Loket (Smart Lane Recommender)
+      // -------------------------------------------------------------------
+      renderLaneCards(current, muEff);
+
+      // Render ulang ikon Lucide pada elemen yang baru diperbarui
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    function renderLaneCards(metrics, muEff) {
+      const grid = document.getElementById('laneCardsGrid');
+      const extraLaneBadge = document.getElementById('extraLaneBadge');
+
+      if (state.m === 5) {
+        extraLaneBadge.classList.remove('hidden');
+      } else {
+        extraLaneBadge.classList.add('hidden');
+      }
+
+      const activeLanesCount = Math.min(state.m, 4);
+      const baseQueuePerLane = metrics.stable ? Math.max(1, Math.round(metrics.lq)) : 6;
+
+      // Buat variasi beban realistis antar-jalur untuk menunjukkan kecerdasan Smart Lane Recommender
+      // Contoh: Jalur 1 mungkin lebih sedikit orangnya tetapi bawa Troli Penuh, sehingga Jalur 2 yang keranjang ringan tetap lebih cepat!
+      const lanes = [];
+      for (let i = 1; i <= 4; i++) {
+        if (i > activeLanesCount) {
+          lanes.push({ id: i, active: false });
+          continue;
+        }
+
+        let peopleCount = baseQueuePerLane;
+        let hasHeavyTrolley = state.heavyLoad;
+
+        if (i === 1) {
+          peopleCount = Math.max(1, baseQueuePerLane);
+          hasHeavyTrolley = true; // Jalur 1 disimulasikan sedang melayani troli besar
+        } else if (i === 2) {
+          peopleCount = Math.max(1, baseQueuePerLane + (activeLanesCount > 1 ? 1 : 0));
+          hasHeavyTrolley = false; // Jalur 2 lebih banyak 1 orang tapi belanja ringan -> lebih cepat selesai!
+        } else if (i === 3) {
+          peopleCount = Math.max(1, baseQueuePerLane + 1);
+          hasHeavyTrolley = state.heavyLoad;
+        } else if (i === 4) {
+          peopleCount = Math.max(0, baseQueuePerLane - 1);
+          hasHeavyTrolley = false;
+        }
+
+        // Estimasi waktu selesai jalur ini (menit)
+        const laneServiceDuration = (1 / muEff) * (hasHeavyTrolley ? 1.35 : 0.85);
+        const estMinutes = Math.max(0.3, (peopleCount * laneServiceDuration) + (metrics.stable ? 0 : 3.5));
+
+        lanes.push({
+          id: i,
+          active: true,
+          people: peopleCount,
+          heavy: hasHeavyTrolley,
+          estMinutes: estMinutes
+        });
+      }
+
+      // Cari jalur aktif dengan waktu selesai tercepat
+      const activeLanes = lanes.filter(l => l.active);
+      let fastestLaneId = null;
+      if (activeLanes.length > 0) {
+        activeLanes.sort((a, b) => a.estMinutes - b.estMinutes);
+        fastestLaneId = activeLanes[0].id;
+      }
+
+      grid.innerHTML = lanes.map(lane => {
+        if (!lane.active) {
+          return `
+            <div class="rounded-2xl bg-slate-900/70 border border-slate-800 p-4 flex flex-col justify-between opacity-65">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <span class="font-heading font-bold text-sm text-slate-400">Loket ${lane.id}</span>
+                  <span class="w-3.5 h-3.5 rounded-full bg-slate-600 border-2 border-slate-700"></span>
+                </div>
+                <div class="py-4 text-center">
+                  <i data-lucide="lock" class="w-6 h-6 text-slate-600 mx-auto mb-1.5"></i>
+                  <div class="font-mono text-xs font-bold text-slate-500">LOKET TUTUP</div>
+                </div>
+              </div>
+              <div class="pt-2.5 border-t border-slate-800 text-[11px] font-mono text-slate-500 text-center">
+                Standby Cadangan
+              </div>
+            </div>
+          `;
+        }
+
+        const isFastest = lane.id === fastestLaneId;
+        const isCrowded = !isFastest && (lane.estMinutes >= 2.8 || (!metrics.stable && lane.heavy));
+
+        let borderClass = 'border-amber-500/40 bg-slate-800/80';
+        let bulbClass = 'bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.7)]';
+        let statusLabel = 'ANTREAN SEDANG';
+        let statusTextClass = 'text-amber-300';
+
+        if (isFastest) {
+          borderClass = 'border-emerald-500 bg-emerald-950/35 shadow-md shadow-emerald-950/40';
+          bulbClass = 'bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.9)] beacon-active';
+          statusLabel = 'JALUR TERCEPAT';
+          statusTextClass = 'text-emerald-400';
+        } else if (isCrowded) {
+          borderClass = 'border-rose-500/50 bg-rose-950/25';
+          bulbClass = 'bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.8)]';
+          statusLabel = 'PADAT / BEBAN BERAT';
+          statusTextClass = 'text-rose-400';
+        }
+
+        const loadIcon = lane.heavy ? 'shopping-cart' : 'shopping-bag';
+        const loadText = lane.heavy ? 'Troli Penuh' : 'Belanja Ringan';
+        const loadBadgeClass = lane.heavy ? 'bg-amber-500/20 text-amber-300' : 'bg-blue-500/20 text-blue-300';
+
+        return `
+          <div class="rounded-2xl border-2 ${borderClass} p-4 flex flex-col justify-between transition-all duration-300">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-heading font-bold text-sm text-white">Loket ${lane.id}</span>
+                <span class="w-4 h-4 rounded-full ${bulbClass}" title="${statusLabel}"></span>
+              </div>
+
+              <div class="font-mono text-[10px] font-extrabold tracking-wider ${statusTextClass} mb-3">
+                ${statusLabel}
+              </div>
+
+              <div class="flex items-center justify-between bg-slate-900/80 rounded-xl px-3 py-2 mb-2.5 border border-slate-700/70">
+                <span class="text-xs text-slate-400">Pengantre</span>
+                <span class="font-mono text-sm font-bold text-white">${lane.people} org</span>
+              </div>
+
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium ${loadBadgeClass} w-full justify-center">
+                <i data-lucide="${loadIcon}" class="w-3.5 h-3.5"></i>
+                <span>${loadText}</span>
+              </div>
+            </div>
+
+            <div class="mt-3 pt-2.5 border-t border-slate-700/80 flex items-center justify-between text-xs">
+              <span class="text-slate-400">Est. Selesai:</span>
+              <span class="font-mono font-bold text-white">${lane.estMinutes.toFixed(1)} mnt</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    lambdaSlider.addEventListener('input', updateSimulatorUI);
+    muSlider.addEventListener('input', updateSimulatorUI);
+
+    // ---------------------------------------------------------------------
+    // 3. NAVIGASI TAB KEBUTUHAN ALAT, HARDWARE & TECH STACK
+    // ---------------------------------------------------------------------
+    function switchTechTab(tabKey) {
+      const panels = {
+        mvp: document.getElementById('tabContentMvp'),
+        b2b: document.getElementById('tabContentB2b'),
+        table: document.getElementById('tabContentTable')
+      };
+
+      const buttons = {
+        mvp: document.getElementById('tabBtnMvp'),
+        b2b: document.getElementById('tabBtnB2b'),
+        table: document.getElementById('tabBtnTable')
+      };
+
+      Object.keys(panels).forEach(key => {
+        if (key === tabKey) {
+          panels[key].classList.remove('hidden');
+          buttons[key].className = 'tech-tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-blue-700 shadow-sm transition text-left sm:text-center';
+        } else {
+          panels[key].classList.add('hidden');
+          buttons[key].className = 'tech-tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition text-left sm:text-center';
+        }
+      });
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    // Inisialisasi awal saat dokumen selesai dimuat
+    window.addEventListener('DOMContentLoaded', () => {
+      updateSimulatorUI();
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    });
+  </script>
+</body>
+</html>
